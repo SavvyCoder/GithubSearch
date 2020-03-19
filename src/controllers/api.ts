@@ -27,11 +27,15 @@ export const getRepos = async (req: Request, res: Response) => {
   try {
     const body: RepoQuery = req.body;
     const cacheKey = `api${JSON.stringify(req.body)}`;
-    apiCache.get(cacheKey) && res.send(apiCache.get(cacheKey));
-    //If the data is not in our cache get fresh data from API
-    const { data } = await api().get(`${body.name}`);
-    apiCache.set(cacheKey, data);
-    res.send(data);
+    if (apiCache.get(cacheKey)) {
+      //If we have the cached data, send it
+      return res.send(apiCache.get(cacheKey));
+    } else {
+      //If the data is not in our cache get fresh data from API
+      const { data } = await api().get(`${body.name}`);
+      apiCache.set(cacheKey, data);
+      return res.send(data);
+    }
   } catch (err) {
     throw err;
   }

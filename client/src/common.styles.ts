@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 
 export const searchStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,3 +23,11 @@ export const searchStyles = makeStyles((theme: Theme) =>
     }
   })
 );
+
+export const SearchHeading = styled(Typography)`
+  padding: 25px 0 25px 0;
+`;
+
+export const SeachContainer = styled.div`
+  text-align: center;
+`;

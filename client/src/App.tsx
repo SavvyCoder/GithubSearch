@@ -4,6 +4,7 @@ import "./App.css";
 import Search from "./components/Search";
 import Container from "@material-ui/core/Container";
 import Api from "./services/Api";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 function App() {
   const [query, setQuery] = useState();
