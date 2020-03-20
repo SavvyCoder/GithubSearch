@@ -8,7 +8,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import { searchStyles, SearchHeading, SeachContainer } from "../common.styles";
 
 interface SearchProps {
-  [key: string]: any;
+  setQuery: Function;
 }
 
 export default (props: SearchProps) => {
@@ -17,7 +17,14 @@ export default (props: SearchProps) => {
   return (
     <SeachContainer>
       <SearchHeading variant="h4">Github Search</SearchHeading>
-      <Paper component="form" className={classes.root}>
+      <Paper
+        component="form"
+        className={classes.root}
+        onSubmit={event => {
+          event.preventDefault();
+          props.setQuery(searchInput);
+        }}
+      >
         <IconButton className={classes.iconButton} aria-label="menu">
           <MenuIcon />
         </IconButton>

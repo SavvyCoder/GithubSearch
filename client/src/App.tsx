@@ -4,11 +4,13 @@ import "./App.css";
 import Search from "./components/Search";
 import Container from "@material-ui/core/Container";
 import Api from "./services/Api";
+import Results from "./components/Results";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { ContentContainer } from "./common.styles";
 
 function App() {
   const [query, setQuery] = useState();
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState();
   const [loading, setLoading] = useState(false);
 
   //Hook to fetch our data on search submit
@@ -20,6 +22,7 @@ function App() {
           const res = await Api().post("", {
             name: query
           });
+          console.log(res.data);
           setResults(res.data);
         } catch (err) {
           throw err;
@@ -37,8 +40,15 @@ function App() {
   }, [results]);
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Search setQuery={setQuery} />
+      <ContentContainer>
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          results && <Results data={results.items} />
+        )}
+      </ContentContainer>
     </Container>
   );
 }
