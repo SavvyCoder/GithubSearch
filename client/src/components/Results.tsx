@@ -1,38 +1,28 @@
 import React from "react";
 import {
-  resultStyles,
   ResultsContainer,
   StarIcon,
   ResultText,
   ResultItem,
   EyeIcon,
   ForkIcon,
-  BugIcon
+  BugIcon,
+  PaperResults
 } from "../common.styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import { ResultData } from "../common.types";
 
 interface ResultsProps {
   data: ResultData[] | null;
-}
-
-interface ResultData {
-  name: string;
-  id: number;
-  full_name: string;
-  description?: string;
-  stargazers_count: number;
-  watchers: number;
-  forks_count: number;
-  open_issues: number;
+  setDetail: Function;
 }
 
 interface ResultProps {
   resultData: ResultData;
+  setDetail: Function;
 }
 
-export const Result = ({ resultData }: ResultProps) => {
-  const classes = resultStyles();
+export const Result = ({ resultData, setDetail }: ResultProps) => {
   const {
     name,
     stargazers_count,
@@ -41,8 +31,14 @@ export const Result = ({ resultData }: ResultProps) => {
     open_issues
   } = resultData;
   return (
-    <Grid item xs={12}>
-      <Paper className={classes.paper}>
+    <Grid
+      item
+      xs={12}
+      onClick={e => {
+        setDetail(resultData);
+      }}
+    >
+      <PaperResults>
         <ResultItem>
           <ResultText>{name}</ResultText>
         </ResultItem>
@@ -62,17 +58,23 @@ export const Result = ({ resultData }: ResultProps) => {
           <StarIcon />
           <ResultText>{stargazers_count}</ResultText>
         </ResultItem>
-      </Paper>
+      </PaperResults>
     </Grid>
   );
 };
 
-export default ({ data }: ResultsProps) => {
+export default ({ data, setDetail }: ResultsProps) => {
   return (
     <ResultsContainer>
       <Grid container spacing={3}>
         {(data as ResultData[]).map((resultData: ResultData, index: number) => {
-          return <Result resultData={resultData} key={resultData.id} />;
+          return (
+            <Result
+              resultData={resultData}
+              key={resultData.id}
+              setDetail={setDetail}
+            />
+          );
         })}
       </Grid>
     </ResultsContainer>

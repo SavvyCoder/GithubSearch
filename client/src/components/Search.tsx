@@ -7,22 +7,12 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import CriteriaMenu from "../components/Criteria";
 import { searchStyles, SearchHeading, SeachContainer } from "../common.styles";
-
-interface ResultData {
-  name: string;
-  id: number;
-  full_name: string;
-  description?: string;
-  stargazers_count: number;
-  watchers: number;
-  forks_count: number;
-  open_issues: number;
-  language: string;
-}
+import { ResultData } from "../common.types";
 
 interface SearchProps {
   setQuery: Function;
   useResults: [ResultData[] | null, Function];
+  useDetails: [ResultData | null, Function];
 }
 
 export default (props: SearchProps) => {
@@ -52,6 +42,7 @@ export default (props: SearchProps) => {
         </IconButton>
         <CriteriaMenu
           useResults={props.useResults}
+          useDetails={props.useDetails}
           anchor={[anchorEl, setAnchorEl]}
         />
         <InputBase

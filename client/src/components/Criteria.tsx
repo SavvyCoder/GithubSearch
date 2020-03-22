@@ -1,27 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
-import { menuSelectStyles } from "../common.styles";
+import { CriteriaForm } from "../common.styles";
+import { ResultData } from "../common.types";
 
 interface CriteriaProps {
   useResults: [ResultData[] | null, Function];
+  useDetails: [ResultData | null, Function];
   anchor: [HTMLElement | null, Function];
-}
-
-interface ResultData {
-  name: string;
-  id: number;
-  full_name: string;
-  description?: string;
-  stargazers_count: number;
-  watchers: number;
-  forks_count: number;
-  open_issues: number;
-  language: string;
 }
 
 type Sort = "stars_asc" | "stars_desc" | "score_asc" | "score_desc" | "none";
@@ -29,6 +18,7 @@ type Sort = "stars_asc" | "stars_desc" | "score_asc" | "score_desc" | "none";
 export default (props: CriteriaProps) => {
   const [anchorEl, setAnchorEl] = props.anchor;
   const [results, setResults] = props.useResults;
+  const [detail, setDetail] = props.useDetails;
 
   const [sort, setSort] = React.useState<Sort>("none");
   const [filterLanguage, setFilterLanguage] = React.useState<string>("none");
@@ -49,28 +39,54 @@ export default (props: CriteriaProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    if (results && sort) {
+      setResults(sortResults(results as ResultData[], sort));
+    }
+  }, [sort]);
+
+  useEffect(() => {
+    if (results && filterLanguage) {
+      setResults(filterByLanguage(results as ResultData[], filterLanguage));
+    }
+  }, [filterLanguage]);
+
+  useEffect(() => {
+    setSort("none");
+    setFilterLanguage("none");
+  }, [results]);
+
   return (
     <Menu
       id="criteria-menu"
       elevation={0}
       anchorEl={anchorEl}
-      keepMounted
+      keepMounted={true}
       open={Boolean(anchorEl)}
       onClose={handleClose}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "center"
-      }}
       transformOrigin={{
         vertical: "top",
         horizontal: "center"
       }}
       style={{ marginTop: "52px" }}
     >
-      <MenuItem onClick={handleClose} disabled={Boolean(results)}>
-        Reset
+      <MenuItem
+        onClick={() => {
+          setSort("none");
+          setFilterLanguage("none");
+          setDetail(null);
+          setResults(results);
+          handleClose();
+        }}
+        disabled={!Boolean(results)}
+      >
+        {detail ? "Go back" : "Reset"}
       </MenuItem>
-      <MenuItem onClick={handleClose} disabled={!Boolean(results)}>
+      <MenuItem
+        onClick={handleClose}
+        disabled={!Boolean(results) || Boolean(detail)}
+      >
         <SelectMenuItem
           options={sortOptions}
           label="Sort By"
@@ -78,9 +94,12 @@ export default (props: CriteriaProps) => {
           helperText="Select sort option"
         />
       </MenuItem>
-      <MenuItem>
+      <MenuItem
+        onClick={handleClose}
+        disabled={!Boolean(results) || Boolean(detail)}
+      >
         <SelectMenuItem
-          options={languageOptions as Set<option>}
+          options={languageOptions}
           label="Language"
           useValue={[filterLanguage, setFilterLanguage]}
           helperText="Select filter language"
@@ -96,19 +115,18 @@ interface option {
 }
 
 interface SelectMenuItemProps {
-  options: option[] | Set<option> | null;
+  options: option[] | null;
   useValue: [string | number, Function];
   label: string;
   helperText: string;
 }
 
 export const SelectMenuItem = (props: SelectMenuItemProps) => {
-  const classes = menuSelectStyles();
   const { options, helperText, label } = props;
   const [value, setValue] = props.useValue;
 
   return (
-    <FormControl className={classes.formControl}>
+    <CriteriaForm>
       <InputLabel id="select-helper-label">{label}</InputLabel>
       <Select
         labelId="select-helper-label"
@@ -123,29 +141,59 @@ export const SelectMenuItem = (props: SelectMenuItemProps) => {
         </MenuItem>
         {/* Map our options to option select components */}
         {options &&
-          (Array.from(options) as option[]).map(
-            (option: option, index: number) => {
-              return <MenuItem value={option.value}>{option.text}</MenuItem>;
-            }
-          )}
+          (options as option[]).map((option: option, index: number) => {
+            return <MenuItem value={option.value}>{option.text}</MenuItem>;
+          })}
       </Select>
       <FormHelperText>{helperText}</FormHelperText>
-    </FormControl>
+    </CriteriaForm>
   );
 };
 
-export const filterLanguage = (results: ResultData[], language: string) => {
+export const filterByLanguage = (results: ResultData[], language: string) => {
+  if (language === "none") {
+    return results;
+  }
   return results.filter((result: ResultData) => {
     return result.language === language;
   });
 };
 
+export const sortResults = (results: ResultData[], sort: Sort) => {
+  if (sort === "none") {
+    return results;
+  }
+  let [key, order] = sort.split("_");
+  const _results: ResultData[] = JSON.parse(JSON.stringify(results));
+  let isDesc = order === "desc";
+  switch (key) {
+    case "stars":
+      return _results.sort((a: ResultData, b: ResultData) => {
+        return isDesc
+          ? b.stargazers_count - a.stargazers_count
+          : a.stargazers_count - b.stargazers_count;
+      });
+    case "score":
+      return _results.sort((a: ResultData, b: ResultData) => {
+        return isDesc ? b.score - a.score : a.score - b.score;
+      });
+  }
+};
+
 export const buildLanguageFilter = (results: ResultData[]) => {
-  const languageSet = new Set();
+  const languageSet: Set<string> = new Set();
   results.forEach((result: ResultData) => {
-    languageSet.add({ value: result.language, text: result.language });
+    if (!result.language) {
+      return;
+    }
+    languageSet.add(result.language);
   });
-  return languageSet;
+  return Array.from(languageSet).map(language => {
+    return {
+      value: language,
+      text: language
+    };
+  });
 };
 
 export const buildSortOptions = (sortOptions: Sort[]) => {

@@ -1,11 +1,23 @@
 import React from "react";
 import styled from "styled-components";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  createMuiTheme
+} from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import Avatar from "@material-ui/core/Avatar";
+import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import Icon from "@material-ui/core/Icon";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 
-//Our material UI style objects
+const theme = createMuiTheme();
+
+//Our material UI class style objects
 
 export const searchStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,32 +42,56 @@ export const searchStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const resultStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
-      alignItems: "center",
-      justifyContent: "space-between",
-      display: "flex"
-    }
-  })
-);
-
-export const menuSelectStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120
-    }
-  })
-);
-
 //Our "styled-components"
+
+export const PaperResults = styled(Paper)`
+  padding: ${theme.spacing(2)}px;
+  color: ${theme.palette.text.primary};
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  &:hover {
+    background-color: ${theme.palette.grey[300]};
+    transition: background-color 200ms linear;
+  }
+`;
+
+export const CriteriaForm = styled(FormControl)`
+  margin: ${theme.spacing(1)}px;
+  minwidth: 120px;
+`;
+
+export const DetailAvatar = styled(Avatar)`
+  margin: auto;
+  padding: 10px 0 10px 0;
+  height: 50px;
+  width: 50px;
+`;
 
 export const SearchHeading = styled(Typography)`
   padding: 25px 0 25px 0;
 `;
+
+export const DetailHeading = styled(Typography)`
+  padding: 25px 0 25px 0;
+  margin: auto;
+`;
+
+export const DetailItem = styled(Grid)`
+  display: flex;
+  flex-basis: 100%;
+  &&& {
+    padding: ${theme.spacing(3)}px;
+  }
+  align-items: center;
+  justify-content: center;
+  flex-direction: ${(props: { direction?: string }) =>
+    props.direction ? props.direction : "row"};
+`;
+
+export const DetailText = styled.span``;
+
+export const DetailSubHeader = styled(Typography)``;
 
 export const SeachContainer = styled.div`
   text-align: center;
@@ -70,13 +106,16 @@ export const ContentContainer = styled(Container)`
   text-align: center;
 `;
 
-export const ResultText = styled.span``;
+export const ResultText = styled.div`
+  word-break: break-word;
+`;
 
 export const ResultItem = styled.div`
   display: flex;
   align-items: center;
-  width: 20%;
+  flex-basis: 100%;
   text-align: left;
+  padding: ${theme.spacing(1)}px;
 `;
 
 const CommonIconStyles = {
