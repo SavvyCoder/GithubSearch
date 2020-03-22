@@ -13,7 +13,7 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
 interface ResultsProps {
-  data: ResultData[];
+  data: ResultData[] | null;
 }
 
 interface ResultData {
@@ -71,7 +71,7 @@ export default ({ data }: ResultsProps) => {
   return (
     <ResultsContainer>
       <Grid container spacing={3}>
-        {data.map((resultData: ResultData, index: number) => {
+        {(data as ResultData[]).map((resultData: ResultData, index: number) => {
           return <Result resultData={resultData} key={resultData.id} />;
         })}
       </Grid>

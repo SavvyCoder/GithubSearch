@@ -10,7 +10,7 @@ import { ContentContainer } from "./common.styles";
 
 function App() {
   const [query, setQuery] = useState();
-  const [results, setResults] = useState();
+  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
   //Hook to fetch our data on search submit
@@ -23,7 +23,7 @@ function App() {
             name: query
           });
           console.log(res.data);
-          setResults(res.data);
+          setResults(res.data.items);
         } catch (err) {
           throw err;
         }
@@ -41,13 +41,9 @@ function App() {
 
   return (
     <Container maxWidth="md">
-      <Search setQuery={setQuery} />
+      <Search setQuery={setQuery} useResults={[results, setResults]} />
       <ContentContainer>
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          results && <Results data={results.items} />
-        )}
+        {loading ? <CircularProgress /> : results && <Results data={results} />}
       </ContentContainer>
     </Container>
   );

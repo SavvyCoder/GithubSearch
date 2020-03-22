@@ -30,15 +30,26 @@ export const searchStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const resultStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary,
-    alignItems: "center",
-    justifyContent: "space-between",
-    display: "flex"
-  }
-}));
+export const resultStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      padding: theme.spacing(2),
+      color: theme.palette.text.secondary,
+      alignItems: "center",
+      justifyContent: "space-between",
+      display: "flex"
+    }
+  })
+);
+
+export const menuSelectStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120
+    }
+  })
+);
 
 //Our "styled-components"
 

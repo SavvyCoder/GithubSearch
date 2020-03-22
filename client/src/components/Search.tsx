@@ -5,15 +5,31 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
+import CriteriaMenu from "../components/Criteria";
 import { searchStyles, SearchHeading, SeachContainer } from "../common.styles";
+
+interface ResultData {
+  name: string;
+  id: number;
+  full_name: string;
+  description?: string;
+  stargazers_count: number;
+  watchers: number;
+  forks_count: number;
+  open_issues: number;
+  language: string;
+}
 
 interface SearchProps {
   setQuery: Function;
+  useResults: [ResultData[] | null, Function];
 }
 
 export default (props: SearchProps) => {
   const classes = searchStyles();
   const [searchInput, setSearchInput] = useState("");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
   return (
     <SeachContainer>
       <SearchHeading variant="h4">Github Search</SearchHeading>
@@ -25,9 +41,19 @@ export default (props: SearchProps) => {
           props.setQuery(searchInput);
         }}
       >
-        <IconButton className={classes.iconButton} aria-label="menu">
+        <IconButton
+          className={classes.iconButton}
+          aria-label="menu"
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            setAnchorEl(event.currentTarget);
+          }}
+        >
           <MenuIcon />
         </IconButton>
+        <CriteriaMenu
+          useResults={props.useResults}
+          anchor={[anchorEl, setAnchorEl]}
+        />
         <InputBase
           className={classes.input}
           placeholder="Search Github For Repositories"
