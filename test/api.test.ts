@@ -1,10 +1,11 @@
 import request from "supertest";
 import app from "../src/app";
 
-describe("GET /api", () => {
+describe("POST /api", () => {
   it("should return 200 OK", () => {
     return request(app)
-      .get("/api")
+      .post("/api")
+      .send({ name: "banana" })
       .expect(200);
   });
 });
