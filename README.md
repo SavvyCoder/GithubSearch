@@ -1,5 +1,9 @@
 # Github Repo Search API
 
+## What it does
+
+A simple Express-React-Node application that extends github search api with caching and a barebones interface.
+
 ## Getting Started
 
 To get the application running on your machine, clone this repository and type 'npm run first'.
