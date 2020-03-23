@@ -2,12 +2,12 @@ import React from "react";
 import { ResultData } from "../common.types";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { DetailAvatar } from "../common.styles";
 import {
   DetailHeading,
   DetailItem,
   DetailText,
   DetailSubHeader,
+  DetailAvatar,
   StarIcon,
   EyeIcon,
   BugIcon,
@@ -53,7 +53,7 @@ export default ({ result }: DetailsProps) => {
         </DetailItem>
         <DetailItem item xs={12} sm={6} direction="column">
           <DetailSubHeader variant="h6">Size</DetailSubHeader>
-          <DetailText>{size}</DetailText>
+          <DetailText>{size}KB</DetailText>
         </DetailItem>
         <DetailItem item xs={12} sm={6}>
           <StarIcon />

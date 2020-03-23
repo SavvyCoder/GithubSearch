@@ -30,7 +30,6 @@ function App() {
           const res = await Api().post("", {
             name: query
           });
-          console.log(res.data);
           setResults(res.data.items);
           setDirtyResults(JSON.parse(JSON.stringify(res.data.items)));
           setDetail(null);
@@ -68,7 +67,7 @@ function App() {
         useDetails={[detail, setDetail]}
       />
       <ContentContainer>
-        {loading ? <CircularProgress /> : dirtyResults && content}
+        <>{loading ? <CircularProgress /> : dirtyResults && content}</>
       </ContentContainer>
     </Container>
   );

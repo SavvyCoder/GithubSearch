@@ -1,7 +1,6 @@
 "use strict";
 
 import { Request, Response } from "express";
-import async from "async";
 import axios from "axios";
 import NodeCache from "node-cache";
 
@@ -33,7 +32,7 @@ export const getRepos = async (req: Request, res: Response) => {
     } else {
       //If the data is not in our cache get fresh data from API
       const { data } = await api().get(`${body.name}`);
-      apiCache.set(cacheKey, data);
+      apiCache.set(cacheKey, data, 43200);
       return res.send(data);
     }
   } catch (err) {

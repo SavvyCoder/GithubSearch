@@ -65,7 +65,7 @@ export const Result = ({ resultData, setDetail }: ResultProps) => {
 
 export default ({ data, setDetail }: ResultsProps) => {
   return (
-    <ResultsContainer>
+    <ResultsContainer data-testid="results-container">
       <Grid container spacing={3}>
         {(data as ResultData[]).map((resultData: ResultData, index: number) => {
           return (

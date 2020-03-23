@@ -142,7 +142,11 @@ export const SelectMenuItem = (props: SelectMenuItemProps) => {
         {/* Map our options to option select components */}
         {options &&
           (options as option[]).map((option: option, index: number) => {
-            return <MenuItem value={option.value}>{option.text}</MenuItem>;
+            return (
+              <MenuItem value={option.value} key={option.value}>
+                {option.text}
+              </MenuItem>
+            );
           })}
       </Select>
       <FormHelperText>{helperText}</FormHelperText>
