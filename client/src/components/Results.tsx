@@ -30,6 +30,8 @@ export const Result = ({ resultData, setDetail }: ResultProps) => {
     forks_count,
     open_issues
   } = resultData;
+
+  //Markup is a combination of MUI and styled(MUI_Component)
   return (
     <Grid
       item
@@ -63,6 +65,7 @@ export const Result = ({ resultData, setDetail }: ResultProps) => {
   );
 };
 
+//Loop over results and render
 export default ({ data, setDetail }: ResultsProps) => {
   return (
     <ResultsContainer data-testid="results-container">

@@ -4,6 +4,8 @@
 
 A simple Express-React-Node application that extends github search api with caching and a barebones interface.
 
+**Sorting By Score might yield no change, the api is currently assigning a flat score value (always 1) for each returned item regardless of the query**
+
 ## Getting Started
 
 To get the application running on your machine, clone this repository and type 'npm run first'.

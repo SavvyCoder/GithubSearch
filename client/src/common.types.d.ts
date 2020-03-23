@@ -13,4 +13,5 @@ export interface ResultData {
   forks: number;
   size: number;
   owner: { avatar_url: string; login: string };
+  [key: string]: number;
 }

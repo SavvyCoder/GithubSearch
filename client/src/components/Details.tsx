@@ -31,6 +31,7 @@ export default ({ result }: DetailsProps) => {
     language,
     size
   } = result;
+  //Render details page, most components below are styled components
   return (
     <Paper elevation={3}>
       <Grid container spacing={3}>

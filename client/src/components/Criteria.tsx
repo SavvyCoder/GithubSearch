@@ -13,8 +13,18 @@ interface CriteriaProps {
   anchor: [HTMLElement | null, Function];
 }
 
-type Sort = "stars_asc" | "stars_desc" | "score_asc" | "score_desc" | "none";
+type Sort =
+  | "stars_asc"
+  | "stars_desc"
+  | "score_asc"
+  | "score_desc"
+  | "size_asc"
+  | "size_desc"
+  | "forks_asc"
+  | "forks_desc"
+  | "none";
 
+// This component will build sort list and filter list based on the data and render when called by menu button.
 export default (props: CriteriaProps) => {
   const [anchorEl, setAnchorEl] = props.anchor;
   const [results, setResults] = props.useResults;
@@ -26,6 +36,10 @@ export default (props: CriteriaProps) => {
   const sortList: Sort[] = [
     "stars_asc",
     "stars_desc",
+    "size_asc",
+    "size_desc",
+    "forks_asc",
+    "forks_desc",
     "score_asc",
     "score_desc"
   ];
@@ -40,18 +54,21 @@ export default (props: CriteriaProps) => {
     setAnchorEl(null);
   };
 
+  //When sort changes we alter the results to reflect sort key
   useEffect(() => {
     if (results && sort) {
       setResults(sortResults(results as ResultData[], sort));
     }
   }, [sort]);
 
+  //When filter changes we alter results to exclude filter value
   useEffect(() => {
     if (results && filterLanguage) {
       setResults(filterByLanguage(results as ResultData[], filterLanguage));
     }
   }, [filterLanguage]);
 
+  //When results changes (this is pure results) we reset sort and filter selections, since a new query was made.
   useEffect(() => {
     setSort("none");
     setFilterLanguage("none");
@@ -60,7 +77,7 @@ export default (props: CriteriaProps) => {
   return (
     <Menu
       id="criteria-menu"
-      elevation={0}
+      elevation={1}
       anchorEl={anchorEl}
       keepMounted={true}
       open={Boolean(anchorEl)}
@@ -154,6 +171,7 @@ export const SelectMenuItem = (props: SelectMenuItemProps) => {
   );
 };
 
+//Filter method to filter by language
 export const filterByLanguage = (results: ResultData[], language: string) => {
   if (language === "none") {
     return results;
@@ -163,6 +181,7 @@ export const filterByLanguage = (results: ResultData[], language: string) => {
   });
 };
 
+//Sort results based on sort key and order
 export const sortResults = (results: ResultData[], sort: Sort) => {
   if (sort === "none") {
     return results;
@@ -177,13 +196,14 @@ export const sortResults = (results: ResultData[], sort: Sort) => {
           ? b.stargazers_count - a.stargazers_count
           : a.stargazers_count - b.stargazers_count;
       });
-    case "score":
+    default:
       return _results.sort((a: ResultData, b: ResultData) => {
-        return isDesc ? b.score - a.score : a.score - b.score;
+        return isDesc ? b[key] - a[key] : a[key] - b[key];
       });
   }
 };
 
+//Build language selections by populating set with unique language values returned from results
 export const buildLanguageFilter = (results: ResultData[]) => {
   const languageSet: Set<string> = new Set();
   results.forEach((result: ResultData) => {
@@ -200,6 +220,7 @@ export const buildLanguageFilter = (results: ResultData[]) => {
   });
 };
 
+//Map sort values to select options text
 export const buildSortOptions = (sortOptions: Sort[]) => {
   //Return string with first value uppercase
   const firstUpper = (text: string) => {

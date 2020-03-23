@@ -13,12 +13,11 @@ import Container from "@material-ui/core/Container";
 import Icon from "@material-ui/core/Icon";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
 
+//Grab default MUI theme to use in styled components for the sake of consistency
 const theme = createMuiTheme();
 
-//Our material UI class style objects
-
+//MUI class object
 export const searchStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

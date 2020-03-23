@@ -15,6 +15,7 @@ interface SearchProps {
   useDetails: [ResultData | null, Function];
 }
 
+//Renders search bar, sets query to be handled in App, threads results, details, renderCondition to criteria
 export default (props: SearchProps) => {
   const classes = searchStyles();
   const [searchInput, setSearchInput] = useState("");
